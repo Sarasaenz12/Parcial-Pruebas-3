@@ -1,11 +1,14 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from src.database.config import get_db
+from src.database.config import get_db, engine
+from src.database.models import Base
 from src.database.repositorio import ReservasRepositorio
 from pydantic import BaseModel
 
 app = FastAPI()
+
+Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,7 +17,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 class ReservaInput(BaseModel):
     cliente_email: str
